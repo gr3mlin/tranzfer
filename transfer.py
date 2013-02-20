@@ -6,10 +6,10 @@
 
 #this now only works on *Nix
 
-import md5, logging, pickle, os
+import md5, logging, pickle, os, glob
 
 FILENAME = 'filedirectory.txt'
-FILETYPES = ['.gif', '.jpg', '.jpeg', '.mpg', '.mpeg', '.mp4', '.avi')
+FILETYPES = ['.gif', '.jpg', '.jpeg', '.mpg', '.mpeg', '.mp4', '.avi']
 
 logging.basicConfig(filename='log.log',level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
@@ -31,7 +31,8 @@ def pickleToFile(info):
 def pickleFromFile():
 	directory = open(FILENAME, 'rb')
 	return(pickle.load(directory))
-	
+
+#this needs to be refined.. basically useless - need to hash only the results of listFiles()
 def hashFiles():
 	hashes = []
 	for file in os.listdir(os.getcwd()):
@@ -39,7 +40,7 @@ def hashFiles():
 		try:
 			output = open(file, 'r')
 			hasher.update(output.read())
-			hashes = hasher.hexdigest()
+			hashes.append(hasher.hexdigest())
 		except:
 			logging.error("couldn't hash: " + file)
 	return hashes
@@ -48,7 +49,7 @@ def pollDf():
 	mounted = []
 	os.system('df > df.txt')
 	df = open('df.txt', 'r')
-	for line in df.readlines()
+	for line in df.readlines():
 		line = line.strip()
 		rec = dict(zip(gdf_cols, line.split(None, 5)))
 		filesys = rec['filesys']
@@ -57,12 +58,20 @@ def pollDf():
 			mounted.append(dir)
 	return mounted
 
-def listFiles(directory):
+#currently these two functions do not walk directories. they need too
+
+def listFilesDwd(directory):
 	listOfFiles = []
-	if not directory:
-		directory = os.getcwd()
 	for format in FILETYPES:
-		listOfFiles = listOfFiles + (glob.glob(directory + '*' + format))
+		listOfFiles = listOfFiles + (glob.glob(directory + '/*' + format))
+	return listOfFiles
+
+#this function is probably not that useful..
+def listFiles():
+	listOfFiles = []
+	directory = os.getcwd()
+	for format in FILETYPES:
+		listOfFiles = listOfFiles + (glob.glob(directory + '/*' + format))
 	return listOfFiles
 
 ### MAIN ###
