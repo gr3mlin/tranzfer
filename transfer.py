@@ -4,6 +4,8 @@
 # transfers files to other nodes
 # checks and deletes files for which the hash has arrived
 
+#this now only works on *Nix
+
 import md5, logging, pickle, os
 
 FILENAME = 'filedirectory.txt'
