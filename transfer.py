@@ -7,11 +7,12 @@
 import md5, logging, pickle, os
 
 FILENAME = 'filedirectory.txt'
+FILETYPES = ['.gif', '.jpg', '.jpeg', '.mpg', '.mpeg', '.mp4', '.avi')
 
 logging.basicConfig(filename='log.log',level=logging.DEBUG, format='%(asctime)s %(message)s', datefmt='%m/%d/%Y %I:%M:%S %p')
 
 def checkFileDirectory():
-  try:
+	try:
 		directory = open(FILENAME, 'r')
 	except:
 		logging.warning("creating File Directory")
@@ -40,3 +41,27 @@ def hashFiles():
 		except:
 			logging.error("couldn't hash: " + file)
 	return hashes
+
+def pollDf():
+	mounted = []
+	os.system('df > df.txt')
+	df = open('df.txt', 'r')
+	for line in df.readlines()
+		line = line.strip()
+		rec = dict(zip(gdf_cols, line.split(None, 5)))
+		filesys = rec['filesys']
+		dir = rec.get('dir')
+		if (dir and not (filesys.find(':') >= 0 or pseudofilesys.get(filesys))):
+			mounted.append(dir)
+	return mounted
+
+def listFiles(directory):
+	listOfFiles = []
+	if not directory:
+		directory = os.getcwd()
+	for format in FILETYPES:
+		listOfFiles = listOfFiles + (glob.glob(directory + '*' + format))
+	return listOfFiles
+
+### MAIN ###
+
